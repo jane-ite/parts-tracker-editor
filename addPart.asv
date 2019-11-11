@@ -18,11 +18,7 @@ sheet_name = input('What is the name of the file? (NAME.xlsx): ', 's');
         % new version or replace (will go to replacePart function)
         
 % version number (if new version, letter will already have happened)
-    % if completely new, version number will be set to 1
-    
-% set update date to today's date
-
-% description, get user to input
+    % if completely new, version numbe
 
 
 end

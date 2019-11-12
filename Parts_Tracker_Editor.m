@@ -24,13 +24,6 @@ clc;
 overall_goals = ["Look up a part", "Modify an existing sheet", "Create a new sheet", "Multiple things with the same sheet"];
 num_goals = length(overall_goals);
 
-% % Specific Goal: Exactly the specific thing
-% specifics = cell(num_goals,1);
-% specifics{1} = ["Assembly", "Part"]; %,'DWG/DXF', 'Stl']
-% specifics{2} = ["Add a new part", "Update an existing part", "Remove an existing part", "Replace an existing part"];
-% specifics{3} = [];
-% specifics[4] = [];
-
 %% Determine User Desire:
     
     %% Overall Goal

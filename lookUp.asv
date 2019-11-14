@@ -40,9 +40,7 @@ while(check_something_else)
     
     % load that sheet
     sheet_IDs = readtable(tracker_name, 'Sheet', part_type, 'A:B');
-    sheet_IDs = string(t
-    
-    
+    sheet_IDs = string(table2cell(sheet_IDs));  
     
     
     %% Do you know the name
@@ -50,24 +48,14 @@ while(check_something_else)
     name_known = input("Do you know the name of the file? Y/N: ");
     if(name_known)
         name = input("Please type the file name (CATEGORY;PART_NAME): ", 's');
-        exists, location = findPart(sheetIDs, name);
+        [exists, partloc] = findPart(sheet_IDs, part_type, name);
+        
+
         if(~exists)
             fprintf("\nI cannot locate a part of this name, please try again\n");
             do_something_else = true;
         else
-            part
-            full_name = part_info(1);
-            category = part_info(2);
-            version = part_info(3);
-            last_updated = [art_info(4);
-                description = part_info(5);
-                
-                fprintf("\n" + part_type + ": " + full_name + ":" +...
-                "\n\tCategory: " + category +...
-                "\n\tVersion: " + version +...
-                "\n\tLast Updated:" +last_updated +...
-                "\n\tDescription: " +...
-                "\n\t\t" + description);
+            part_info = readtable(tracker_name, 'Sheet', part_type, 
                 
                 loop_again = input("\n\nWould you like to look up something else? Y/N");
                 do_something_else = (loop_again == "Y" || loop_again == "y");

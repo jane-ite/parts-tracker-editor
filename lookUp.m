@@ -30,47 +30,39 @@ options = length(types);
 
 %% What are we looking up
 while(check_something_else)
+    do_something_else = false;
     
     %% Part Type
     for i = 1:1:options
-        fprintf("\n" +string(i) + types(i))
+        fprintf("\n" +string(i) + ' - ' + types(i));
     end
-    type_number = input("What type of part are you looking up? Input the corresponding number: ");
-    part_type = types(type_number);
+    type_number = input("\nWhat type of part are you looking up? Input the corresponding number: ");
+    part_type = string(types(type_number));
     
     % load that sheet
-    sheet_IDs = readtable(tracker_name, 'Sheet', part_type, 'A:B');
-    sheet_IDs = string(table2cell(sheet_IDs));  
+    sheet_IDs = readtable(tracker_name, 'Sheet', part_type, 'Range', 'A:B');
+    sheet_IDs = string(table2cell(sheet_IDs));
     
     
     %% Do you know the name
     
-    name_known = input("Do you know the name of the file? Y/N: ");
-    if(name_known)
+    name_known = input("Do you know the name of the file? Y/N: ", 's');
+    if(all(name_known == 'Y') || all(name_known == 'y'))
         name = input("Please type the file name (CATEGORY;PART_NAME): ", 's');
-        
-        %$%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% function findPart
+        [exists, part_loc, rows_to_take] = findPart(sheet_IDs, name);
 
         if(~exists)
             fprintf("\nI cannot locate a part of this name, please try again\n");
             do_something_else = true;
         else
-            full_name = part_info(1);
-            category = part_info(2);
-            version = part_info(3);
-            last_updated = [art_info(4);
-                description = part_info(5);
-                
-                fprintf("\n" + part_type + ": " + full_name + ":" +...
-                "\n\tCategory: " + category +...
-                "\n\tVersion: " + version +...
-                "\n\tLast Updated:" +last_updated +...
-                "\n\tDescription: " +...
-                "\n\t\t" + description);
-                
-                loop_again = input("\n\nWould you like to look up something else? Y/N");
-                do_something_else = (loop_again == "Y" || loop_again == "y");
+            for i = 1:1:rows_to_take
+                part_info = string(table2cell(readtable(tracker_name, 'Sheet', part_type, 'Range', part_loc(i), 'PreserveVariableNames', true)));
+                fprintf('\n\nPart:          ' + part_info(1) + ";" + part_info(2) + ";" + part_info(3) + part_info(4))
+                fprintf('\nLast Updated:  ' + part_info(5));
+                fprintf('\nDescription:   ' + part_info(6));
+            end
+            loop_again = input("\n\nTo look up another part, type Y: ");
+            do_something_else = (all(loop_again == "Y") || all(loop_again == "y"));
         end
     
     %% No you don't

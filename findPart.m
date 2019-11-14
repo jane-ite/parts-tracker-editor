@@ -1,0 +1,69 @@
+function [exists, part_loc, rows_to_take] = findPart(sheet_IDs, name)
+% FINDPART function for the main script Parts_Tracker_Editor
+% Finds a part of a specified name, returns the location of the row/rows
+% corresponding to that part
+%   sheet_IDS is a n x 2 cell array containing the categories of the part
+%   in the first row and the names of the part in the second. name is the
+%   a user inputted string of the format CATEGORY;PART_NAME. 
+
+%% Error Checking
+% format
+[n, c] = size(sheet_IDs);
+colon = strfind(name, ';');
+if(~contains(name,';') || colon == 1 || colon == length(name))
+    error('Part name is not of required format.')
+elseif(c ~= 2)
+    error('Improper identification sheet provided.')
+end
+
+% If no match found, auto return
+exists = false;
+part_loc = [];
+rows_to_take = 0;
+
+%% Name Matching
+% creat location keeper
+location_keeper = linspace(1, n, n); % numbers correspond to each row of the sheet
+% Separate into parts
+% Category
+category = name(1: colon-1);
+% Part Name
+part_name = name(colon+1: length(name));
+
+% Find Categories
+category_match = ismember(sheet_IDs(:,1), category);
+% Check for no match
+if(~any(category_match))
+    return
+end
+
+% Isolate Matching Categories
+cut_sheet_IDs = sheet_IDs(category_match,:);
+location_keeper = location_keeper(category_match);
+% Find Names
+name_match = ismember(cut_sheet_IDs(:,2), part_name);
+if(sum(name_match) == 0)
+    return
+end
+
+% Isolate Matching Names
+% wanted_parts = cut_sheet_IDs(name_match,:);
+location_keeper = location_keeper(name_match);
+
+% Find the location in original table
+% if multiple parts
+rows_to_take = length(location_keeper);
+disp(rows_to_take)
+% creating strings of the range for fetching
+part_loc = strings(1, rows_to_take);
+for i = 1:1:rows_to_take
+    rge = "A" + num2str(location_keeper(i)) + ":F" + num2str(location_keeper(i) + 1);
+    part_loc(i) = rge;
+end
+
+exists = true;
+
+return;
+end
+    
+
